@@ -22,16 +22,17 @@
   <FILE>TP4 Timer.lss</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <prog><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>7</LINE></prog>
-  <onOVF1addr><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>82</LINE></onOVF1addr>
-  <main><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>24</LINE></main>
-  <seleccionar_modo><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>57</LINE></seleccionar_modo>
-  <delay><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>92</LINE></delay>
-  <caso0><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>60</LINE></caso0>
-  <caso1><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>65</LINE></caso1>
-  <caso2><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>69</LINE></caso2>
-  <salida><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>76</LINE></salida>
-  <caso3><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>73</LINE></caso3>
-  <sec_count><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>94</LINE></sec_count>
+  <inicio><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>11</LINE></inicio>
+  <interrupcion_overflow><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>77</LINE></interrupcion_overflow>
+  <main><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>26</LINE></main>
+  <toggle_led><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>61</LINE></toggle_led>
+  <seleccionar_modo><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>36</LINE></seleccionar_modo>
+  <inicializar_contador><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>69</LINE></inicializar_contador>
+  <loop><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>30</LINE></loop>
+  <caso0><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>39</LINE></caso0>
+  <caso1><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>46</LINE></caso1>
+  <caso2><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>50</LINE></caso2>
+  <salida><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>57</LINE></salida>
+  <caso3><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>54</LINE></caso3>
  </LABELS>
 </ASSEMBLER_INFO>

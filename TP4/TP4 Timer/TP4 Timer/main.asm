@@ -1,97 +1,87 @@
-.org 0000
-        rjmp prog
+.def overflow = r18
+.equ valor_inicial_TCNT1 = -16000
+.equ pin_led = PB0
+
+.org 0
+        rjmp inicio
 
 .org OVF1addr
-    rjmp onOVF1addr
+    rjmp interrupcion_overflow
 
-prog:
-        ;Inicializa stack
-        ldi r20,high (ramend)   
-        out sph,r20
-        ldi r20,low (ramend)
-        out spl,r20
+inicio: 
+		;Inicializa stack
+        ldi r16, high(RAMEND)   
+        out SPH, r16
+        ldi r16, low(RAMEND)
+        out SPL, r16
+		
+		ldi r16, (1<<TOIE1)
+		sts TIMSK1, r16			; Habilita interrupcion por overflow
+
+		sbi DDRB, pin_led		; Configura el pin del led como salida
+
+		sei						
 		
 
-		ldi r20, (1<<TOIE1)
-		sts TIMSK1, r20        ; Habilita interrupcion por overflow
-
-		sei
-
-		ldi r16, 0
-		sbi ddrb,0
-
-
-main:	in r17, PORTB
-		ldi r16, 1
-		eor r17, r16
-		out PORTB, r17
+main:	call toggle_led
 		call seleccionar_modo
-		ldi r20, 0xD0
-		sts TCNT1H, r20
-		sts TCNT1L, r20	;inicializo contador
-		call delay
+		call inicializar_contador
+		clr overflow
+loop:	cpi overflow, 1
+		brne loop	; espera que se ejecute la interrupcion por overflow      
 		rjmp main
 
 
-/*seleccionar_modo:
-		ldi r20, 0
-		sbis PIND, 0
-		rjmp casox0
-		sbis PIND, 1
-		rjmp caso01
-		ldi r20, 0b00000101
-		rjmp salida
-caso01:	ldi r20, 0b00000100
-		rjmp salida
-casox0:	sbis PIND, 1
-		rjmp caso00
-		ldi r20, 0b00000011
-		rjmp salida
-caso00:	sbi PORTB, 0
-		rjmp seleccionar_modo
-salida:	sts TCCR1B, r20
-		ret*/
-
-
-
+; Configura el timer segun los pulsadores presionados
 seleccionar_modo:
 		in r16, PIND
-		andi r16, 0b00000011
+		andi r16, 0b00001100
 caso0:	cpi r16, 0x00000000
 		brne caso1
-		sbi PORTB, 0
-		ldi r20, 0b00000000
+		; Mientras no haya ningun pulsador presionado, enciende el led y apaga el timer
+		sbi PORTB, pin_led	
+		ldi r20, 0
+		sts TCCR1B, r20	
 		rjmp seleccionar_modo
-caso1:	cpi r16, 0b00000010
+caso1:	cpi r16, 0b00001000
 		brne caso2
-		ldi r20, 0b00000011
+		ldi r20, (1<<CS11)|(1<<CS10) ; Prescaler clk/64
 		rjmp salida
-caso2:	cpi r16, 0b00000001
+caso2:	cpi r16, 0b00000100
 		brne caso3
-		ldi r20, 0b00000100
+		ldi r20, (1<<CS12)	; Prescaler clk/256
 		rjmp salida
-caso3:	cpi r16, 0b00000011
+caso3:	cpi r16, 0b00001100
 		brne salida
-		ldi r20, 0b00000101
+		ldi r20, (1<<CS12)|(1<<CS10) ; Prescaler clk/1024
 salida:	sts TCCR1B, r20
 		ret
 
-		
+; Conmuta el estado del led
+toggle_led:
+		in r16, PORTB
+		ldi r17, (1<<pin_led)
+		eor r16, r17
+		out PORTB, r16		
+		ret
 
+; Inicializa el contador TCNT1 del timer 1
+inicializar_contador:
+		ldi r16, high(valor_inicial_TCNT1)
+		sts TCNT1H, r16
+		ldi r16, low(valor_inicial_TCNT1)
+		sts TCNT1L, r16
+		ret
 
-onOVF1addr:
+; Setea el registro de overflow
+interrupcion_overflow:
 	push r16
 	in r16, sreg
 	push r16
-	inc r18
+	ldi overflow, 1
 	pop r16
 	out sreg, r16
 	pop r16
     reti   
-
-delay:
-		clr r18          
-sec_count:
-		cpi r18, 1      
-		brne sec_count           
-		ret
+ 
+		

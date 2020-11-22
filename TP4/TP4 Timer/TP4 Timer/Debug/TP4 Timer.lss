@@ -1,10 +1,10 @@
 
-AVRASM ver. 2.2.7  C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm Wed Nov 18 02:33:48 2020
+AVRASM ver. 2.2.7  C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm Sun Nov 22 03:27:15 2020
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\avrasm\inc\m328pdef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\avrasm\inc\m328pdef.inc'
                                  
-                                 .org 0000
+                                 .def overflow = r18
                                  
                                  ;***** Created: 2011-02-09 12:03 ******* Source: ATmega328P.xml **********
                                  ;*************************************************************************
@@ -985,101 +985,91 @@ AVRASM ver. 2.2.7  C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer
                                  
                                  ; ***** END OF FILE ******************************************************
                                  
-000000 c01a                              rjmp prog
+                                 .equ valor_inicial_TCNT1 = -16000
+                                 .equ pin_led = PB0
+                                 
+                                 .org 0
+000000 c01a                              rjmp inicio
                                  
                                  .org OVF1addr
-00001a c02d                          rjmp onOVF1addr
+00001a c036                          rjmp interrupcion_overflow
                                  
-                                 prog:
-                                         ;Inicializa stack
-00001b e048                              ldi r20,high (ramend)   
-00001c bf4e                              out sph,r20
-00001d ef4f                              ldi r20,low (ramend)
-00001e bf4d                              out spl,r20
+                                 inicio: 
+                                 		;Inicializa stack
+00001b e008                              ldi r16, high(RAMEND)   
+00001c bf0e                              out SPH, r16
+00001d ef0f                              ldi r16, low(RAMEND)
+00001e bf0d                              out SPL, r16
+                                 		
+00001f e001                      		ldi r16, (1<<TOIE1)
+000020 9300 006f                 		sts TIMSK1, r16			; Habilita interrupcion por overflow
+                                 
+000022 9a20                      		sbi DDRB, pin_led		; Configura el pin del led como salida
+                                 
+000023 9478                      		sei						; Habilita interrupciones globales
                                  		
                                  
-00001f e041                      		ldi r20, (1<<TOIE1)
-000020 9340 006f                 		sts TIMSK1, r20        ; Habilita interrupcion por overflow
-                                 
-000022 9478                      		sei
-                                 
-000023 e000                      		ldi r16, 0
-000024 9a20                      		sbi ddrb,0
-                                 
-                                 
-000025 b115                      main:	in r17, PORTB
-000026 e001                      		ldi r16, 1
-000027 2710                      		eor r17, r16
-000028 b915                      		out PORTB, r17
-000029 940e 0033                 		call seleccionar_modo
-00002b ed40                      		ldi r20, 0xD0
-00002c 9340 0085                 		sts TCNT1H, r20
-00002e 9340 0084                 		sts TCNT1L, r20	;inicializo contador
-000030 940e 0050                 		call delay
-000032 cff2                      		rjmp main
+000024 940e 0045                 main:	call toggle_led
+000026 940e 002e                 		call seleccionar_modo
+000028 940e 004a                 		call inicializar_contador
+00002a 2722                      		clr overflow
+00002b 3021                      loop:	cpi overflow, 1
+00002c f7f1                      		brne loop	; espera que se ejecute la interrupcion por overflow      
+00002d cff6                      		rjmp main
                                  
                                  
-                                 /*seleccionar_modo:
-                                 		ldi r20, 0
-                                 		sbis PIND, 0
-                                 		rjmp casox0
-                                 		sbis PIND, 1
-                                 		rjmp caso01
-                                 		ldi r20, 0b00000101
-                                 		rjmp salida
-                                 caso01:	ldi r20, 0b00000100
-                                 		rjmp salida
-                                 casox0:	sbis PIND, 1
-                                 		rjmp caso00
-                                 		ldi r20, 0b00000011
-                                 		rjmp salida
-                                 caso00:	sbi PORTB, 0
-                                 		rjmp seleccionar_modo
-                                 salida:	sts TCCR1B, r20
-                                 		ret*/
-                                 
-                                 
-                                 
+                                 ; Configura el timer segun los pulsadores presionados
                                  seleccionar_modo:
-000033 b109                      		in r16, PIND
-000034 7003                      		andi r16, 0b00000011
-000035 3000                      caso0:	cpi r16, 0x00000000
-000036 f419                      		brne caso1
-000037 9a28                      		sbi PORTB, 0
-000038 e040                      		ldi r20, 0b00000000
-000039 cff9                      		rjmp seleccionar_modo
-00003a 3002                      caso1:	cpi r16, 0b00000010
-00003b f411                      		brne caso2
-00003c e043                      		ldi r20, 0b00000011
-00003d c007                      		rjmp salida
-00003e 3001                      caso2:	cpi r16, 0b00000001
-00003f f411                      		brne caso3
-000040 e044                      		ldi r20, 0b00000100
-000041 c003                      		rjmp salida
-000042 3003                      caso3:	cpi r16, 0b00000011
-000043 f409                      		brne salida
-000044 e045                      		ldi r20, 0b00000101
-000045 9340 0081                 salida:	sts TCCR1B, r20
-000047 9508                      		ret
+00002e b109                      		in r16, PIND
+00002f 700c                      		andi r16, 0b00001100
+000030 3000                      caso0:	cpi r16, 0x00000000
+000031 f429                      		brne caso1
+                                 		; Mientras no haya ningun pulsador presionado, enciende el led y apaga el timer
+000032 9a28                      		sbi PORTB, pin_led	
+000033 e040                      		ldi r20, 0
+000034 9340 0081                 		sts TCCR1B, r20	
+000036 cff7                      		rjmp seleccionar_modo
+000037 3008                      caso1:	cpi r16, 0b00001000
+000038 f411                      		brne caso2
+000039 e043                      		ldi r20, (1<<CS11)|(1<<CS10) ; Prescaler clk/64
+00003a c007                      		rjmp salida
+00003b 3004                      caso2:	cpi r16, 0b00000100
+00003c f411                      		brne caso3
+00003d e044                      		ldi r20, (1<<CS12)	; Prescaler clk/256
+00003e c003                      		rjmp salida
+00003f 300c                      caso3:	cpi r16, 0b00001100
+000040 f409                      		brne salida
+000041 e045                      		ldi r20, (1<<CS12)|(1<<CS10) ; Prescaler clk/1024
+000042 9340 0081                 salida:	sts TCCR1B, r20
+000044 9508                      		ret
                                  
-                                 		
+                                 ; Conmuta el estado del led
+                                 toggle_led:
+000045 b105                      		in r16, PORTB
+000046 e011                      		ldi r17, (1<<pin_led)
+000047 2701                      		eor r16, r17
+000048 b905                      		out PORTB, r16		
+000049 9508                      		ret
                                  
+                                 ; Inicializa el contador TCNT1 del timer 1
+                                 inicializar_contador:
+00004a ec01                      		ldi r16, high(valor_inicial_TCNT1)
+00004b 9300 0085                 		sts TCNT1H, r16
+00004d e800                      		ldi r16, low(valor_inicial_TCNT1)
+00004e 9300 0084                 		sts TCNT1L, r16
+000050 9508                      		ret
                                  
-                                 onOVF1addr:
-000048 930f                      	push r16
-000049 b70f                      	in r16, sreg
-00004a 930f                      	push r16
-00004b 9523                      	inc r18
-00004c 910f                      	pop r16
-00004d bf0f                      	out sreg, r16
-00004e 910f                      	pop r16
-00004f 9518                          reti   
-                                 
-                                 delay:
-000050 2722                      		clr r18          
-                                 sec_count:
-000051 3021                      		cpi r18, 1      
-000052 f7f1                      		brne sec_count           
+                                 ; Setea el registro de overflow
+                                 interrupcion_overflow:
+000051 930f                      	push r16
+000052 b70f                      	in r16, sreg
+000053 930f                      	push r16
+000054 e021                      	ldi overflow, 1
+000055 910f                      	pop r16
+000056 bf0f                      	out sreg, r16
+000057 910f                      	pop r16
+000058 9518                          reti   
+                                  
 
 
 RESOURCE USE INFORMATION
@@ -1099,7 +1089,7 @@ counted separately from r26..r31 here.
 "ATmega328P" register use summary:
 x  :   0 y  :   0 z  :   0 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  15 r17:   3 r18:   3 r19:   0 r20:  14 
+r13:   0 r14:   0 r15:   0 r16:  25 r17:   2 r18:   3 r19:   0 r20:   6 
 r21:   0 r22:   0 r23:   0 r24:   0 r25:   0 r26:   0 r27:   0 r28:   0 
 r29:   0 r30:   0 r31:   0 
 Registers used: 4 out of 35 (11.4%)
@@ -1110,26 +1100,26 @@ andi  :   1 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0
 brcc  :   0 brcs  :   0 break :   0 breq  :   0 brge  :   0 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
 brne  :   5 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
-brvs  :   0 bset  :   0 bst   :   0 call  :   2 cbi   :   0 cbr   :   0 
+brvs  :   0 bset  :   0 bst   :   0 call  :   3 cbi   :   0 cbr   :   0 
 clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   1 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
 cpi   :   5 cpse  :   0 dec   :   0 eor   :   1 fmul  :   0 fmuls :   0 
-fmulsu:   0 icall :   0 ijmp  :   0 in    :   3 inc   :   1 jmp   :   0 
-ld    :   0 ldd   :   0 ldi   :  10 lds   :   0 lpm   :   0 lsl   :   0 
+fmulsu:   0 icall :   0 ijmp  :   0 in    :   3 inc   :   0 jmp   :   0 
+ld    :   0 ldd   :   0 ldi   :  11 lds   :   0 lpm   :   0 lsl   :   0 
 lsr   :   0 mov   :   0 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
 neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :   4 pop   :   2 
-push  :   2 rcall :   0 ret   :   2 reti  :   1 rjmp  :   6 rol   :   0 
+push  :   2 rcall :   0 ret   :   3 reti  :   1 rjmp  :   6 rol   :   0 
 ror   :   0 sbc   :   0 sbci  :   0 sbi   :   2 sbic  :   0 sbis  :   0 
 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   0 seh   :   0 
 sei   :   1 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
-sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   4 
+sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   5 
 sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
-Instructions used: 18 out of 113 (15.9%)
+Instructions used: 17 out of 113 (15.0%)
 
 "ATmega328P" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x0000a8    118      0    118   32768   0.4%
+[.cseg] 0x000000 0x0000b2    128      0    128   32768   0.4%
 [.dseg] 0x000100 0x000100      0      0      0    2048   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 

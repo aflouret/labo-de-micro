@@ -22,13 +22,13 @@
   <FILE>TP4 PWM.lss</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <prog><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 PWM\TP4 PWM\main.asm</FILE><LINE>12</LINE></prog>
-  <interrupcion0><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 PWM\TP4 PWM\main.asm</FILE><LINE>44</LINE></interrupcion0>
-  <interrupcion1><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 PWM\TP4 PWM\main.asm</FILE><LINE>57</LINE></interrupcion1>
-  <here><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 PWM\TP4 PWM\main.asm</FILE><LINE>40</LINE></here>
-  <salida_int0><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 PWM\TP4 PWM\main.asm</FILE><LINE>53</LINE></salida_int0>
-  <delay><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 PWM\TP4 PWM\main.asm</FILE><LINE>74</LINE></delay>
-  <salida_int1><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 PWM\TP4 PWM\main.asm</FILE><LINE>66</LINE></salida_int1>
-  <L1><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 PWM\TP4 PWM\main.asm</FILE><LINE>78</LINE></L1>
+  <inicio><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 PWM\TP4 PWM\main.asm</FILE><LINE>14</LINE></inicio>
+  <interrupcion_pulsador0><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 PWM\TP4 PWM\main.asm</FILE><LINE>47</LINE></interrupcion_pulsador0>
+  <interrupcion_pulsador1><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 PWM\TP4 PWM\main.asm</FILE><LINE>62</LINE></interrupcion_pulsador1>
+  <esperar><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 PWM\TP4 PWM\main.asm</FILE><LINE>43</LINE></esperar>
+  <salida_int0><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 PWM\TP4 PWM\main.asm</FILE><LINE>58</LINE></salida_int0>
+  <delay><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 PWM\TP4 PWM\main.asm</FILE><LINE>78</LINE></delay>
+  <salida_int1><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 PWM\TP4 PWM\main.asm</FILE><LINE>72</LINE></salida_int1>
+  <L1><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 PWM\TP4 PWM\main.asm</FILE><LINE>82</LINE></L1>
  </LABELS>
 </ASSEMBLER_INFO>

@@ -1,10 +1,10 @@
 
-AVRASM ver. 2.2.7  C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 PWM\TP4 PWM\main.asm Wed Nov 18 03:23:23 2020
+AVRASM ver. 2.2.7  C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 PWM\TP4 PWM\main.asm Sun Nov 22 04:00:18 2020
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\avrasm\inc\m328pdef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\avrasm\inc\m328pdef.inc'
                                  
-                                 .org 0000
+                                 .equ pin_led = PB1
                                  
                                  ;***** Created: 2011-02-09 12:03 ******* Source: ATmega328P.xml **********
                                  ;*************************************************************************
@@ -985,89 +985,93 @@ AVRASM ver. 2.2.7  C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 PWM\TP4 PWM\mai
                                  
                                  ; ***** END OF FILE ******************************************************
                                  
-000000 c004                              rjmp prog
+                                 
+                                 .org 0000
+000000 c004                              rjmp inicio
                                  
                                  		
                                  .org 0x02
-000002 c01b                      		rjmp interrupcion0
+000002 c01a                      		rjmp interrupcion_pulsador0
                                  
                                  .org 0x04
-000004 c025                      		rjmp interrupcion1
+000004 c024                      		rjmp interrupcion_pulsador1
                                  
                                  
-                                 prog:
+                                 inicio:
                                          ;Inicializa stack
 000005 e048                              ldi r20,high(ramend)   
 000006 bf4e                              out sph,r20
 000007 ef4f                              ldi r20,low(ramend)
 000008 bf4d                              out spl,r20
                                  		
+                                 		; Inicializa el registro de comparacion del timer 1
 000009 e050                      		ldi r21, 0x00
 00000a 9350 0089                 		sts OCR1AH, r21
 00000c e061                      		ldi r22, 0x01
 00000d 9360 0088                 		sts OCR1AL, r22
                                  
+                                 		; Configura el timer en modo 5 (Fast PWM, 8-bit), non-inverting
 00000f e801                      		ldi r16, (1<<COM1A1)|(1<<WGM10)
 000010 9300 0080                 		sts TCCR1A, r16
-                                 
 000012 e009                      		ldi r16, (1<<WGM12)|(1<<CS10)
 000013 9300 0081                 		sts TCCR1B, r16
                                  
-000015 e00f                      		ldi r16, 0x0f
-000016 9300 0069                 		sts EICRA, r16				; Configuro INT0 e INT1 como interrupciones por flanco ascendente
-000018 e003                      		ldi r16, 0x03
-000019 bb0d                      		out EIMSK, r16				; Habilito INT0 e INT1
+                                 		; Habilita INT0 e INT1 como interrupciones por flanco ascendente
+000015 e00f                      		ldi r16, (1<<ISC11)|(1<<ISC10)|(1<<ISC01)|(1<<ISC00)
+000016 9300 0069                 		sts EICRA, r16				
+000018 e003                      		ldi r16, (1<<INT1)|(1<<INT0)
+000019 bb0d                      		out EIMSK, r16				
                                  
-00001a 9478                      		sei
+00001a 9a21                      		sbi DDRB, pin_led		; Configura el pin del led como salida
                                  
-00001b ef0f                      		ldi r16, 0xFF
-00001c b904                      		out ddrb, r16
+00001b 9478                      		sei		; Habilita interrupciones globales
                                  
-                                 here:	
-00001d cfff                      		rjmp here
+                                 esperar:	
+00001c cfff                      		rjmp esperar	; Espera que se presione algun pulsador
                                  		
-                                 
-                                 interrupcion0:	
-00001e 9100 0088                 		lds r16, OCR1AL
-000020 3f0f                      		cpi r16, 0xFF
-000021 f039                      		breq salida_int0
-000022 9408                      		sec
-000023 1f00                      		rol r16
-000024 9300 0088                 		sts OCR1AL, r16
-000026 940e 0035                 		call delay
-000028 9ae0                      		sbi EIFR, 0x00
+                                 ; Aumenta el valor del registro OCR, si el valor no es el maximo (0xFF)
+                                 interrupcion_pulsador0:	
+00001d 9100 0088                 		lds r16, OCR1AL
+00001f 3f0f                      		cpi r16, 0xFF
+000020 f039                      		breq salida_int0
+000021 9408                      		sec
+000022 1f00                      		rol r16
+000023 9300 0088                 		sts OCR1AL, r16
+                                 		; Llama a la rutina de delay y limpia el flag de interrupcion,
+                                 		; para evitar que la interrupcion se ejecute dos veces por el rebote
+000025 940e 0034                 		call delay
+000027 9ae0                      		sbi EIFR, 0x00
                                  salida_int0:	
-000029 9518                      		reti
+000028 9518                      		reti
                                  
-                                 
-                                 interrupcion1:
-                                 		
-00002a 9100 0088                 		lds r16, OCR1AL
-00002c 3000                      		cpi r16, 0x00
-00002d f031                      		breq salida_int1
-00002e 9506                      		lsr r16
-00002f 9300 0088                 		sts OCR1AL, r16
-000031 940e 0035                 		call delay
-000033 9ae1                      		sbi EIFR, 0x01
+                                 ; Disminuye el valor del registro OCR, si el valor no es el minimo (0x00)
+                                 interrupcion_pulsador1:	
+000029 9100 0088                 		lds r16, OCR1AL
+00002b 3000                      		cpi r16, 0x00
+00002c f031                      		breq salida_int1
+00002d 9506                      		lsr r16
+00002e 9300 0088                 		sts OCR1AL, r16
+                                 		; Llama a la rutina de delay y limpia el flag de interrupcion,
+                                 		; para evitar que la interrupcion se ejecute dos veces por el rebote
+000030 940e 0034                 		call delay	
+000032 9ae1                      		sbi EIFR, 0x01
                                  salida_int1:
-000034 9518                      		reti
+000033 9518                      		reti
                                  
                                  
-                                 ; Assembly code auto-generated
-                                 ; by utility from Bret Mulvey
-                                 ; Delay 160 000 cycles
-                                 ; 10ms at 16.0 MHz
+                                 
+                                 ; Delay de 200ms (3200000 ciclos)
                                  delay:
-000035 e121                          ldi  r18, 17
-000036 e33c                          ldi  r19, 60
-000037 ec4c                          ldi  r20, 204
-000038 954a                      L1: dec  r20
-000039 f7f1                          brne L1
-00003a 953a                          dec  r19
-00003b f7e1                          brne L1
-00003c 952a                          dec  r18
-00003d f7d1                          brne L1
-00003e 9508                      	ret
+000034 e121                          ldi  r18, 17
+000035 e33c                          ldi  r19, 60
+000036 ec4c                          ldi  r20, 204
+000037 954a                      L1: dec  r20
+000038 f7f1                          brne L1
+000039 953a                          dec  r19
+00003a f7e1                          brne L1
+00003b 952a                          dec  r18
+00003c f7d1                          brne L1
+00003d 9508                      	ret
 
 
 RESOURCE USE INFORMATION
@@ -1087,7 +1091,7 @@ counted separately from r26..r31 here.
 "ATmega328P" register use summary:
 x  :   0 y  :   0 z  :   0 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  18 r17:   0 r18:   2 r19:   2 r20:   6 
+r13:   0 r14:   0 r15:   0 r16:  16 r17:   0 r18:   2 r19:   2 r20:   6 
 r21:   2 r22:   2 r23:   0 r24:   0 r25:   0 r26:   0 r27:   0 r28:   0 
 r29:   0 r30:   0 r31:   0 
 Registers used: 6 out of 35 (17.1%)
@@ -1103,11 +1107,11 @@ clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   0 cls   :   0
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
 cpi   :   2 cpse  :   0 dec   :   3 eor   :   0 fmul  :   0 fmuls :   0 
 fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   0 jmp   :   0 
-ld    :   0 ldd   :   0 ldi   :  12 lds   :   2 lpm   :   0 lsl   :   0 
+ld    :   0 ldd   :   0 ldi   :  11 lds   :   2 lpm   :   0 lsl   :   0 
 lsr   :   1 mov   :   0 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
-neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :   4 pop   :   0 
+neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :   3 pop   :   0 
 push  :   0 rcall :   0 ret   :   1 reti  :   2 rjmp  :   4 rol   :   1 
-ror   :   0 sbc   :   0 sbci  :   0 sbi   :   2 sbic  :   0 sbis  :   0 
+ror   :   0 sbc   :   0 sbci  :   0 sbi   :   3 sbic  :   0 sbis  :   0 
 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   1 seh   :   0 
 sei   :   1 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
 sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   7 
@@ -1117,7 +1121,7 @@ Instructions used: 17 out of 113 (15.0%)
 "ATmega328P" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x00007e    122      0    122   32768   0.4%
+[.cseg] 0x000000 0x00007c    120      0    120   32768   0.4%
 [.dseg] 0x000100 0x000100      0      0      0    2048   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 

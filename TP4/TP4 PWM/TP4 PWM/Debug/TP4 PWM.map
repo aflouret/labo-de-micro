@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.7  C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 PWM\TP4 PWM\main.asm Wed Nov 18 03:23:23 2020
+AVRASM ver. 2.2.7  C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 PWM\TP4 PWM\main.asm Sun Nov 22 04:00:18 2020
 
 
 EQU  SIGNATURE_000 0000001e
@@ -695,11 +695,12 @@ EQU  ACIaddr      0000002e
 EQU  TWIaddr      00000030
 EQU  SPMRaddr     00000032
 EQU  INT_VECTORS_SIZE 00000034
-CSEG prog         00000005
-CSEG interrupcion0 0000001e
-CSEG interrupcion1 0000002a
-CSEG here         0000001d
-CSEG salida_int0  00000029
-CSEG delay        00000035
-CSEG salida_int1  00000034
-CSEG L1           00000038
+EQU  pin_led      00000001
+CSEG inicio       00000005
+CSEG interrupcion_pulsador0 0000001d
+CSEG interrupcion_pulsador1 00000029
+CSEG esperar      0000001c
+CSEG salida_int0  00000028
+CSEG delay        00000034
+CSEG salida_int1  00000033
+CSEG L1           00000037

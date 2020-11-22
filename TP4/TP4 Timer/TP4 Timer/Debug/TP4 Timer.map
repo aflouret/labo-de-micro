@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.7  C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm Wed Nov 18 02:33:48 2020
+AVRASM ver. 2.2.7  C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm Sun Nov 22 03:27:15 2020
 
 
 EQU  SIGNATURE_000 0000001e
@@ -695,14 +695,18 @@ EQU  ACIaddr      0000002e
 EQU  TWIaddr      00000030
 EQU  SPMRaddr     00000032
 EQU  INT_VECTORS_SIZE 00000034
-CSEG prog         0000001b
-CSEG onOVF1addr   00000048
-CSEG main         00000025
-CSEG seleccionar_modo 00000033
-CSEG delay        00000050
-CSEG caso0        00000035
-CSEG caso1        0000003a
-CSEG caso2        0000003e
-CSEG salida       00000045
-CSEG caso3        00000042
-CSEG sec_count    00000051
+DEF  overflow     r18
+EQU  valor_inicial_TCNT1 ffffc180
+EQU  pin_led      00000000
+CSEG inicio       0000001b
+CSEG interrupcion_overflow 00000051
+CSEG main         00000024
+CSEG toggle_led   00000045
+CSEG seleccionar_modo 0000002e
+CSEG inicializar_contador 0000004a
+CSEG loop         0000002b
+CSEG caso0        00000030
+CSEG caso1        00000037
+CSEG caso2        0000003b
+CSEG salida       00000042
+CSEG caso3        0000003f

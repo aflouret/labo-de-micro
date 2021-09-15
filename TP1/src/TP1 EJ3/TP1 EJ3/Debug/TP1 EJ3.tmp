@@ -1,0 +1,32 @@
+<ASSEMBLER_INFO>
+ <VERSION>2.2.7</VERSION>
+ <DEVICE>"ATmega328P"</DEVICE>
+ <WORKING_DIR>C:\Users\aflou\Documents\Atmel Studio\7.0\Flouret TP1\TP1 EJ3\TP1 EJ3\Debug</WORKING_DIR>
+ <INCLUDE_PATH>
+  <DIR>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\avrasm\inc</DIR>
+  <DIR>C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avrassembler\Include</DIR>
+  <DIR></DIR>
+ </INCLUDE_PATH>
+ <SOURCE_FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\Flouret TP1\TP1 EJ3\TP1 EJ3\main.asm</SOURCE_FILE>
+ <INCLUDED_FILES>
+  <FILE>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\avrasm\inc\m328pdef.inc</FILE>
+ </INCLUDED_FILES>
+ <OBJECT_FILES>
+  <FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\Flouret TP1\TP1 EJ3\TP1 EJ3\Debug\TP1 EJ3.obj</FILE>
+ </OBJECT_FILES>
+ <HEX_FILES>
+  <FILE>TP1 EJ3.hex</FILE>
+ </HEX_FILES>
+ <OUTPUT_FILES>
+  <FILE>TP1 EJ3.map</FILE>
+  <FILE>TP1 EJ3.lss</FILE>
+ </OUTPUT_FILES>
+ <LABELS>
+  <inicio><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\Flouret TP1\TP1 EJ3\TP1 EJ3\main.asm</FILE><LINE>12</LINE></inicio>
+  <l0><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\Flouret TP1\TP1 EJ3\TP1 EJ3\main.asm</FILE><LINE>22</LINE></l0>
+  <parpadear><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\Flouret TP1\TP1 EJ3\TP1 EJ3\main.asm</FILE><LINE>25</LINE></parpadear>
+  <delay><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\Flouret TP1\TP1 EJ3\TP1 EJ3\main.asm</FILE><LINE>33</LINE></delay>
+  <l1><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\Flouret TP1\TP1 EJ3\TP1 EJ3\main.asm</FILE><LINE>37</LINE></l1>
+  <apagar_led><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\Flouret TP1\TP1 EJ3\TP1 EJ3\main.asm</FILE><LINE>46</LINE></apagar_led>
+ </LABELS>
+</ASSEMBLER_INFO>

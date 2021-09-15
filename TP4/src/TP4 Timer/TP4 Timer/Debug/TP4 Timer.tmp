@@ -1,0 +1,38 @@
+<ASSEMBLER_INFO>
+ <VERSION>2.2.7</VERSION>
+ <DEVICE>"ATmega328P"</DEVICE>
+ <WORKING_DIR>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\Debug</WORKING_DIR>
+ <INCLUDE_PATH>
+  <DIR>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\avrasm\inc</DIR>
+  <DIR>C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avrassembler\Include</DIR>
+  <DIR></DIR>
+ </INCLUDE_PATH>
+ <SOURCE_FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</SOURCE_FILE>
+ <INCLUDED_FILES>
+  <FILE>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\avrasm\inc\m328pdef.inc</FILE>
+ </INCLUDED_FILES>
+ <OBJECT_FILES>
+  <FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\Debug\TP4 Timer.obj</FILE>
+ </OBJECT_FILES>
+ <HEX_FILES>
+  <FILE>TP4 Timer.hex</FILE>
+ </HEX_FILES>
+ <OUTPUT_FILES>
+  <FILE>TP4 Timer.map</FILE>
+  <FILE>TP4 Timer.lss</FILE>
+ </OUTPUT_FILES>
+ <LABELS>
+  <inicio><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>13</LINE></inicio>
+  <interrupcion_overflow><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>77</LINE></interrupcion_overflow>
+  <main><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>28</LINE></main>
+  <toggle_led><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>61</LINE></toggle_led>
+  <seleccionar_modo><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>38</LINE></seleccionar_modo>
+  <inicializar_contador><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>69</LINE></inicializar_contador>
+  <loop><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>32</LINE></loop>
+  <caso0><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>41</LINE></caso0>
+  <caso1><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>48</LINE></caso1>
+  <caso2><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>52</LINE></caso2>
+  <salida><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>57</LINE></salida>
+  <caso3><FILE>C:\Users\aflou\Documents\Atmel Studio\7.0\TP4 Timer\TP4 Timer\main.asm</FILE><LINE>56</LINE></caso3>
+ </LABELS>
+</ASSEMBLER_INFO>
